@@ -3,7 +3,8 @@
 import { useEffect, useMemo, useState } from "react";
 
 type Player = { id: string; name: string; score: number };
-type GameState = { players: Player[]; activePlayerId: string; currentScore: number };
+type AwardLog = { id: string; playerName: string; amount: number; totalAfter: number; createdAt: number };
+type GameState = { players: Player[]; activePlayerId: string; currentScore: number; logs: AwardLog[] };
 
 const STORAGE_KEY = "greed-dice-scoreboard-v1";
 const initialState: GameState = {
@@ -13,15 +14,24 @@ const initialState: GameState = {
   ],
   activePlayerId: "player-1",
   currentScore: 0,
+  logs: [],
 };
 
 const formatScore = (score: number) => score.toLocaleString("ko-KR");
+const formatTime = (timestamp: number) => new Intl.DateTimeFormat("ko-KR", { hour: "2-digit", minute: "2-digit" }).format(timestamp);
 const makeId = () => `player-${Date.now()}-${Math.random().toString(16).slice(2)}`;
 
 function loadGame(): GameState {
   try {
     const stored = localStorage.getItem(STORAGE_KEY);
-    return stored ? (JSON.parse(stored) as GameState) : initialState;
+    if (!stored) return initialState;
+    const parsed = JSON.parse(stored) as Partial<GameState>;
+    return {
+      ...initialState,
+      ...parsed,
+      players: parsed.players?.length ? parsed.players : initialState.players,
+      logs: Array.isArray(parsed.logs) ? parsed.logs : [],
+    };
   } catch {
     return initialState;
   }
@@ -31,6 +41,7 @@ export default function Home() {
   const [game, setGame] = useState<GameState>(loadGame);
   const [setupOpen, setSetupOpen] = useState(() => !localStorage.getItem(STORAGE_KEY));
   const [restartOpen, setRestartOpen] = useState(false);
+  const [logOpen, setLogOpen] = useState(false);
   const [editingScore, setEditingScore] = useState(false);
   const [scoreInput, setScoreInput] = useState("0");
   const [undoState, setUndoState] = useState<GameState | null>(null);
@@ -82,10 +93,19 @@ export default function Home() {
   function awardActive() {
     if (game.currentScore === 0 || !activePlayer) return;
     const awardedScore = game.currentScore;
+    const totalAfter = activePlayer.score + awardedScore;
+    const log: AwardLog = {
+      id: `log-${Date.now()}`,
+      playerName: activePlayer.name,
+      amount: awardedScore,
+      totalAfter,
+      createdAt: Date.now(),
+    };
     commit(
       {
         ...game,
         currentScore: 0,
+        logs: [log, ...game.logs],
         players: game.players.map((item) =>
           item.id === activePlayer.id ? { ...item, score: item.score + awardedScore } : item,
         ),
@@ -105,6 +125,7 @@ export default function Home() {
     const next = {
       ...game,
       currentScore: 0,
+      logs: [],
       players: game.players.map((player) => ({ ...player, score: 0 })),
       activePlayerId: game.players[0]?.id ?? "",
     };
@@ -137,6 +158,7 @@ export default function Home() {
           <p className="eyebrow">GREED DICE / SCORE SHEET</p>
         </div>
         <div className="header-actions">
+          <button className="log-button" onClick={() => setLogOpen(true)} aria-label={`점수 지급 로그 ${game.logs.length}건`}>로그{game.logs.length > 0 && <span>{game.logs.length}</span>}</button>
           <button className="undo-button" disabled={!undoState} onClick={() => { if (!undoState) return; setGame(undoState); setUndoState(null); setHighlightedPlayerId(null); setNotice("직전 변경을 되돌렸습니다"); }} aria-label="직전 점수 변경 되돌리기">↶ 되돌리기</button>
           <button className="icon-button" onClick={() => setSetupOpen(true)} aria-label="플레이어 설정">•••</button>
         </div>
@@ -199,6 +221,30 @@ export default function Home() {
         </div>
       </section>
 
+      {logOpen && (
+        <div className="modal-backdrop" role="presentation">
+          <section className="modal log-modal" role="dialog" aria-modal="true" aria-labelledby="log-title">
+            <div className="modal-header">
+              <div><p className="eyebrow">THIS GAME</p><h2 id="log-title">점수 지급 로그</h2></div>
+              <button className="icon-button" onClick={() => setLogOpen(false)} aria-label="로그 닫기">×</button>
+            </div>
+            {game.logs.length === 0 ? (
+              <p className="empty-log">아직 지급된 점수가 없습니다.</p>
+            ) : (
+              <ol className="log-list">
+                {game.logs.map((log) => (
+                  <li key={log.id}>
+                    <time dateTime={new Date(log.createdAt).toISOString()}>{formatTime(log.createdAt)}</time>
+                    <strong>{log.playerName}</strong>
+                    <div><b>+{formatScore(log.amount)}</b><span>누적 {formatScore(log.totalAfter)}</span></div>
+                  </li>
+                ))}
+              </ol>
+            )}
+          </section>
+        </div>
+      )}
+
       {setupOpen && (
         <div className="modal-backdrop" role="presentation">
           <section className="modal" role="dialog" aria-modal="true" aria-labelledby="setup-title">
@@ -231,7 +277,7 @@ export default function Home() {
           <section className="modal confirm-modal" role="alertdialog" aria-modal="true" aria-labelledby="restart-title">
             <span className="warning-mark">!</span>
             <h2 id="restart-title">점수를 모두 지울까요?</h2>
-            <p>플레이어 이름과 순서는 유지되고, 모든 점수만 0으로 초기화됩니다.</p>
+            <p>플레이어 이름과 순서는 유지되고, 모든 점수와 이번 판의 지급 로그가 초기화됩니다.</p>
             <div className="confirm-actions">
               <button onClick={() => setRestartOpen(false)}>취소</button>
               <button className="danger-button" onClick={resetScores}>모든 점수 초기화</button>

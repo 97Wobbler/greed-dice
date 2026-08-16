@@ -27,6 +27,8 @@ h1, h2, p { margin-top: 0; }
 h1 { margin-bottom: 0; font-size: 29px; font-weight: 800; line-height: 1; letter-spacing: -.04em; }
 h2 { margin-bottom: 0; font-size: 18px; }
 .icon-button { width: 44px; height: 40px; border: 1px solid var(--ink); border-radius: 2px; background: transparent; font-weight: 800; }
+.log-button { display: flex; height: 40px; padding: 0 9px; align-items: center; gap: 5px; border: 1px solid var(--ink); border-radius: 2px; background: transparent; font-size: 11px; font-weight: 750; }
+.log-button span { display: grid; min-width: 17px; height: 17px; padding: 0 4px; place-items: center; color: var(--paper); background: var(--ink); font-size: 9px; }
 .undo-button { height: 40px; padding: 0 10px; border: 1px solid var(--ink); border-radius: 2px; background: transparent; font-size: 11px; font-weight: 750; }
 .undo-button:disabled { color: #97958c; border-color: var(--faint); }
 
@@ -73,6 +75,15 @@ h2 { margin-bottom: 0; font-size: 18px; }
 
 .modal-backdrop { position: fixed; z-index: 20; inset: 0; display: flex; align-items: flex-end; justify-content: center; padding: 12px; background: rgba(23, 23, 20, .58); }
 .modal { width: min(100%, 480px); max-height: 90dvh; overflow: auto; padding: 24px 20px calc(20px + env(safe-area-inset-bottom)); border: 2px solid var(--ink); border-radius: 2px; background: var(--paper); box-shadow: 8px 8px 0 rgba(23,23,20,.3); }
+.log-modal { display: flex; max-height: min(78dvh, 640px); flex-direction: column; overflow: hidden; }
+.empty-log { margin: 34px 0 18px; color: var(--muted); font-size: 13px; text-align: center; }
+.log-list { min-height: 0; margin: 22px 0 0; padding: 0; overflow-y: auto; border-top: 2px solid var(--ink); list-style: none; }
+.log-list li { display: grid; min-height: 58px; padding: 10px 2px; grid-template-columns: 54px minmax(0, 1fr) auto; gap: 10px; align-items: center; border-bottom: 1px solid var(--line); }
+.log-list time { color: var(--muted); font-size: 10px; font-variant-numeric: tabular-nums; }
+.log-list strong { overflow: hidden; font-size: 14px; text-overflow: ellipsis; white-space: nowrap; }
+.log-list div { display: grid; justify-items: end; }
+.log-list b { color: #1457d9; font-size: 17px; }
+.log-list div span { margin-top: 2px; color: var(--muted); font-size: 9px; }
 .setup-list { display: grid; gap: 9px; margin: 22px 0 12px; }
 .setup-row { display: grid; grid-template-columns: 22px 1fr auto; gap: 8px; align-items: center; }
 .setup-row > span { color: var(--muted); text-align: center; font-size: 13px; font-weight: 650; }
