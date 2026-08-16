@@ -93,7 +93,33 @@ h2 { margin-bottom: 0; font-size: 18px; }
   .modal-backdrop { align-items: center; }
 }
 
-@media (max-height: 720px) {
+@media (min-width: 768px) {
+  .app-shell {
+    display: grid;
+    width: min(100%, 1024px);
+    padding: max(24px, env(safe-area-inset-top)) 28px max(20px, env(safe-area-inset-bottom));
+    grid-template-areas:
+      "header header"
+      "turn players"
+      "score players"
+      "actions players"
+      ". players";
+    grid-template-columns: minmax(320px, .9fr) minmax(360px, 1.1fr);
+    grid-template-rows: auto auto auto auto 1fr;
+    column-gap: 28px;
+    row-gap: 10px;
+  }
+
+  .topbar { grid-area: header; margin-bottom: 4px; }
+  .turn-strip { grid-area: turn; margin: 0; }
+  .current-card { grid-area: score; align-self: start; }
+  .score-actions { grid-area: actions; margin-top: 0; }
+  .players-section { grid-area: players; margin: 0; padding-left: 28px; border-left: 1px solid var(--line); }
+  .player-main { min-height: 62px; }
+  .player-name { max-width: 220px; }
+}
+
+@media (max-height: 720px) and (max-width: 767px) {
   .app-shell { padding-top: max(10px, env(safe-area-inset-top)); }
   .eyebrow { display: none; }
   h1 { font-size: 25px; }
