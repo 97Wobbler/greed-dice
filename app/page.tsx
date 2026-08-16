@@ -104,7 +104,6 @@ export default function Home() {
     commit(
       {
         ...game,
-        currentScore: 0,
         logs: [log, ...game.logs],
         players: game.players.map((item) =>
           item.id === activePlayer.id ? { ...item, score: item.score + awardedScore } : item,
