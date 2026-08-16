@@ -54,12 +54,12 @@ h2 { margin-bottom: 0; font-size: 18px; }
 .player-list { display: grid; min-height: 0; padding: 0 2px 12px; gap: 9px; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: #c5c5bd transparent; }
 .player-card { overflow: hidden; padding: 0; border: 1px solid var(--line); border-radius: 16px; background: var(--card); transition: border-color .15s, background .15s; }
 .player-card.active { border-color: var(--green); background: #fbfdf9; }
-.player-main { display: grid; width: 100%; min-height: 58px; padding: 12px 14px; border: 0; grid-template-columns: 38px minmax(0, 1fr) auto; gap: 10px; align-items: center; background: transparent; text-align: left; }
-.rank { color: var(--muted); font-size: 12px; font-weight: 700; }
-.player-name { overflow: hidden; font-size: 15px; text-overflow: ellipsis; white-space: nowrap; }
-.player-score { font-size: 22px; font-weight: 650; letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
+.player-main { display: grid; width: 100%; min-height: 58px; padding: 12px 16px; border: 0; grid-template-columns: minmax(70px, 1fr) auto minmax(70px, 1fr); gap: 8px; align-items: center; background: transparent; text-align: left; }
+.rank { justify-self: start; color: var(--muted); font-size: 12px; font-weight: 700; }
+.player-name { max-width: 42vw; overflow: hidden; justify-self: center; font-size: 15px; text-align: center; text-overflow: ellipsis; white-space: nowrap; }
+.player-score { justify-self: end; font-size: 22px; font-weight: 650; line-height: 1; letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
 
-.toast { position: fixed; z-index: 10; right: 16px; bottom: max(18px, env(safe-area-inset-bottom)); left: 16px; display: flex; align-items: center; justify-content: space-between; max-width: 448px; margin: auto; padding: 14px 16px; border-radius: 14px; color: white; background: #222722; box-shadow: 0 12px 32px rgba(0,0,0,.2); font-size: 13px; }
+.toast { z-index: 10; display: flex; width: 100%; min-height: 52px; margin-top: 8px; padding: 12px 16px; flex: 0 0 auto; align-items: center; justify-content: space-between; border-radius: 14px; color: white; background: #222722; box-shadow: 0 8px 22px rgba(0,0,0,.16); font-size: 13px; }
 .toast button { border: 0; color: #bce3c9; background: transparent; font-weight: 800; }
 
 .modal-backdrop { position: fixed; z-index: 20; inset: 0; display: flex; align-items: flex-end; justify-content: center; padding: 12px; background: rgba(27, 30, 27, .48); }
