@@ -125,7 +125,6 @@ export default function Home() {
       <header className="topbar">
         <div>
           <p className="eyebrow">GREED DICE / SCORE SHEET</p>
-          <h1>점수판</h1>
         </div>
         <button className="icon-button" onClick={() => setSetupOpen(true)} aria-label="플레이어 설정">•••</button>
       </header>
@@ -138,10 +137,6 @@ export default function Home() {
         </div>
         <button onClick={() => setActive(activeIndex + 1)} aria-label="다음 플레이어">›</button>
       </section>
-
-      <button className="award-current-button" disabled={game.currentScore === 0 || !activePlayer} onClick={awardActive}>
-        {activePlayer?.name ?? "현재 플레이어"}에게 +{formatScore(game.currentScore)}
-      </button>
 
       <section className="current-card">
         <span className="section-label">현재 점수</span>
@@ -161,18 +156,20 @@ export default function Home() {
           <button onClick={() => adjustCurrent(50)}>+50</button>
           <button onClick={() => adjustCurrent(500)}>+500</button>
         </div>
-        <button className="zero-button" onClick={() => game.currentScore > 0 && commit({ ...game, currentScore: 0 }, "현재 점수를 0으로 만들었습니다")}>현재 점수 0으로</button>
       </section>
 
+      <div className="score-actions">
+        <button className="award-current-button" disabled={game.currentScore === 0 || !activePlayer} onClick={awardActive}>
+          {activePlayer?.name ?? "현재 플레이어"}에게 +{formatScore(game.currentScore)}
+        </button>
+        <button className="zero-button" disabled={game.currentScore === 0} onClick={() => game.currentScore > 0 && commit({ ...game, currentScore: 0 }, "현재 점수를 0으로 만들었습니다")}>현재 점수 0으로</button>
+      </div>
+
       <section className="players-section">
-        <div className="section-heading">
-          <h2>플레이어</h2>
-          <span>{game.players.length}명</span>
-        </div>
         <div className="column-headings" aria-hidden="true">
           <span>순위</span>
           <span>플레이어</span>
-          <span>점수</span>
+          <span>점수 · {game.players.length}명</span>
         </div>
         <div className="player-list">
           {game.players.map((player) => (
