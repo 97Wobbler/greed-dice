@@ -124,7 +124,7 @@ export default function Home() {
     <main className="app-shell">
       <header className="topbar">
         <div>
-          <p className="eyebrow">GREED DICE</p>
+          <p className="eyebrow">GREED DICE / SCORE SHEET</p>
           <h1>점수판</h1>
         </div>
         <button className="icon-button" onClick={() => setSetupOpen(true)} aria-label="플레이어 설정">•••</button>
@@ -168,6 +168,11 @@ export default function Home() {
         <div className="section-heading">
           <h2>플레이어</h2>
           <span>{game.players.length}명</span>
+        </div>
+        <div className="column-headings" aria-hidden="true">
+          <span>순위</span>
+          <span>플레이어</span>
+          <span>점수</span>
         </div>
         <div className="player-list">
           {game.players.map((player) => (
