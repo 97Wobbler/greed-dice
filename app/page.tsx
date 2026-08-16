@@ -72,16 +72,16 @@ export default function Home() {
     setGame({ ...game, activePlayerId: players[normalized].id });
   }
 
-  function award(player: Player) {
-    if (game.currentScore === 0) return;
+  function awardActive() {
+    if (game.currentScore === 0 || !activePlayer) return;
     commit(
       {
         ...game,
         players: game.players.map((item) =>
-          item.id === player.id ? { ...item, score: item.score + game.currentScore } : item,
+          item.id === activePlayer.id ? { ...item, score: item.score + game.currentScore } : item,
         ),
       },
-      `${player.name}에게 +${formatScore(game.currentScore)}`,
+      `${activePlayer.name}에게 +${formatScore(game.currentScore)}`,
     );
   }
 
@@ -139,6 +139,10 @@ export default function Home() {
         <button onClick={() => setActive(activeIndex + 1)} aria-label="다음 플레이어">›</button>
       </section>
 
+      <button className="award-current-button" disabled={game.currentScore === 0 || !activePlayer} onClick={awardActive}>
+        {activePlayer?.name ?? "현재 플레이어"}에게 +{formatScore(game.currentScore)}
+      </button>
+
       <section className="current-card">
         <span className="section-label">현재 점수</span>
         {editingScore ? (
@@ -166,18 +170,12 @@ export default function Home() {
           <span>{game.players.length}명</span>
         </div>
         <div className="player-list">
-          {game.players.map((player, index) => (
+          {game.players.map((player) => (
             <article key={player.id} className={`player-card ${player.id === game.activePlayerId ? "active" : ""}`}>
               <button className="player-main" onClick={() => setGame({ ...game, activePlayerId: player.id })} aria-label={`${player.name}을 현재 순서로 선택`}>
-                <span className="order">{index + 1}</span>
-                <div className="player-info">
-                  <strong>{player.name}</strong>
-                  <span>{rankById.get(player.id)}위</span>
-                </div>
+                <span className="rank">{rankById.get(player.id)}위</span>
+                <strong className="player-name">{player.name}</strong>
                 <span className="player-score">{formatScore(player.score)}</span>
-              </button>
-              <button className="award-button" disabled={game.currentScore === 0} onClick={(event) => { event.stopPropagation(); award(player); }}>
-                {player.name}에게 +{formatScore(game.currentScore)}
               </button>
             </article>
           ))}

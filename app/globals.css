@@ -33,6 +33,9 @@ h2 { margin-bottom: 0; font-size: 18px; }
 .turn-strip div { text-align: center; }
 .turn-strip span { display: block; color: var(--muted); font-size: 11px; }
 .turn-strip strong { font-size: 15px; }
+.award-current-button { flex: 0 0 auto; width: 100%; min-height: 48px; margin-bottom: 10px; border: 0; border-radius: 14px; color: white; background: #243f31; font-size: 14px; font-weight: 800; }
+.award-current-button:active { transform: translateY(1px); }
+.award-current-button:disabled { color: #9fa6a0; background: #e0e1dc; }
 
 .current-card { flex: 0 0 auto; padding: 19px 18px 13px; border-radius: 22px; color: #f9f8f2; background: var(--green); box-shadow: 0 10px 24px rgba(28, 52, 39, .13); text-align: center; }
 .section-label { display: block; color: rgba(255,255,255,.68); font-size: 12px; font-weight: 700; letter-spacing: .08em; }
@@ -49,16 +52,12 @@ h2 { margin-bottom: 0; font-size: 18px; }
 .section-heading { padding: 0 2px 12px; }
 .section-heading span { color: var(--muted); font-size: 12px; }
 .player-list { display: grid; min-height: 0; padding: 0 2px 12px; gap: 9px; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: #c5c5bd transparent; }
-.player-card { overflow: hidden; padding: 15px; border: 1px solid var(--line); border-radius: 18px; background: var(--card); transition: border-color .15s, box-shadow .15s; }
+.player-card { overflow: hidden; padding: 0; border: 1px solid var(--line); border-radius: 16px; background: var(--card); transition: border-color .15s, background .15s; }
 .player-card.active { border-color: var(--green); background: #fbfdf9; }
-.player-main { display: grid; width: 100%; padding: 0; border: 0; grid-template-columns: 30px 1fr auto; gap: 8px; align-items: center; background: transparent; text-align: left; }
-.order { display: grid; width: 25px; height: 25px; place-items: center; border-radius: 50%; color: var(--muted); background: #efede5; font-size: 13px; font-weight: 650; }
-.player-info strong, .player-info span { display: block; }
-.player-info strong { font-size: 15px; }
-.player-info span { margin-top: 2px; color: var(--muted); font-size: 11px; }
-.player-score { font-size: 25px; font-weight: 500; letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
-.award-button { width: 100%; min-height: 42px; margin-top: 12px; border: 0; border-radius: 11px; color: var(--green); background: var(--green-soft); font-size: 13px; font-weight: 800; }
-.award-button:disabled { opacity: .42; }
+.player-main { display: grid; width: 100%; min-height: 58px; padding: 12px 14px; border: 0; grid-template-columns: 38px minmax(0, 1fr) auto; gap: 10px; align-items: center; background: transparent; text-align: left; }
+.rank { color: var(--muted); font-size: 12px; font-weight: 700; }
+.player-name { overflow: hidden; font-size: 15px; text-overflow: ellipsis; white-space: nowrap; }
+.player-score { font-size: 22px; font-weight: 650; letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
 
 .toast { position: fixed; z-index: 10; right: 16px; bottom: max(18px, env(safe-area-inset-bottom)); left: 16px; display: flex; align-items: center; justify-content: space-between; max-width: 448px; margin: auto; padding: 14px 16px; border-radius: 14px; color: white; background: #222722; box-shadow: 0 12px 32px rgba(0,0,0,.2); font-size: 13px; }
 .toast button { border: 0; color: #bce3c9; background: transparent; font-weight: 800; }
@@ -93,13 +92,13 @@ h2 { margin-bottom: 0; font-size: 18px; }
   h1 { font-size: 25px; }
   .turn-strip { margin-top: 10px; }
   .turn-strip button { height: 46px; }
+  .award-current-button { min-height: 43px; }
   .current-card { padding-top: 13px; }
   .score-display { margin-bottom: 9px; font-size: 44px; }
   .adjust-grid button { min-height: 40px; }
   .players-section { margin-top: 13px; }
   .section-heading { padding-bottom: 8px; }
-  .player-card { padding: 12px; }
-  .award-button { min-height: 38px; margin-top: 9px; }
+  .player-main { min-height: 52px; padding-block: 9px; }
 }
 
 @media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; transition: none !important; } }
