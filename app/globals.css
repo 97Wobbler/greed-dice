@@ -21,11 +21,14 @@ button:focus-visible, input:focus-visible { outline: 3px double var(--ink); outl
 .app-shell { display: flex; width: min(100%, 480px); height: 100dvh; min-height: 0; margin: 0 auto; padding: max(18px, env(safe-area-inset-top)) 18px max(12px, env(safe-area-inset-bottom)); flex-direction: column; overflow: hidden; }
 .topbar { min-height: 40px; flex: 0 0 auto; }
 .topbar, .section-heading, .modal-header { display: flex; align-items: center; justify-content: space-between; }
+.header-actions { display: flex; align-items: center; gap: 6px; }
 .eyebrow { margin: 0; color: var(--ink); font-size: 9px; font-weight: 800; letter-spacing: .2em; }
 h1, h2, p { margin-top: 0; }
 h1 { margin-bottom: 0; font-size: 29px; font-weight: 800; line-height: 1; letter-spacing: -.04em; }
 h2 { margin-bottom: 0; font-size: 18px; }
 .icon-button { width: 44px; height: 40px; border: 1px solid var(--ink); border-radius: 2px; background: transparent; font-weight: 800; }
+.undo-button { height: 40px; padding: 0 10px; border: 1px solid var(--ink); border-radius: 2px; background: transparent; font-size: 11px; font-weight: 750; }
+.undo-button:disabled { color: #97958c; border-color: var(--faint); }
 
 .turn-strip { display: grid; flex: 0 0 auto; grid-template-columns: 44px 1fr 44px; align-items: center; margin: 8px 0; border-top: 2px solid var(--ink); border-bottom: 1px solid var(--ink); background: transparent; }
 .turn-strip button { height: 54px; border: 0; background: transparent; font-size: 30px; font-weight: 400; }
@@ -65,9 +68,6 @@ h2 { margin-bottom: 0; font-size: 18px; }
 .player-card.active .rank::before { margin-right: 5px; color: var(--ink); content: "▶"; font-size: 8px; }
 .player-name { max-width: 42vw; overflow: hidden; justify-self: center; font-size: 15px; text-align: center; text-overflow: ellipsis; white-space: nowrap; }
 .player-score { justify-self: end; font-size: 22px; font-weight: 650; line-height: 1; letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
-
-.toast { z-index: 10; display: flex; width: 100%; min-height: 48px; margin-top: 8px; padding: 11px 14px; flex: 0 0 auto; align-items: center; justify-content: space-between; border: 2px solid var(--ink); border-radius: 2px; color: var(--paper); background: var(--ink); font-size: 12px; }
-.toast button { border: 0; color: var(--paper); background: transparent; font-weight: 800; text-decoration: underline; text-underline-offset: 3px; }
 
 .modal-backdrop { position: fixed; z-index: 20; inset: 0; display: flex; align-items: flex-end; justify-content: center; padding: 12px; background: rgba(23, 23, 20, .58); }
 .modal { width: min(100%, 480px); max-height: 90dvh; overflow: auto; padding: 24px 20px calc(20px + env(safe-area-inset-bottom)); border: 2px solid var(--ink); border-radius: 2px; background: var(--paper); box-shadow: 8px 8px 0 rgba(23,23,20,.3); }

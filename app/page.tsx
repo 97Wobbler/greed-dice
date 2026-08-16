@@ -34,17 +34,10 @@ export default function Home() {
   const [editingScore, setEditingScore] = useState(false);
   const [scoreInput, setScoreInput] = useState("0");
   const [undoState, setUndoState] = useState<GameState | null>(null);
-  const [notice, setNotice] = useState("");
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(game));
   }, [game]);
-
-  useEffect(() => {
-    if (!notice) return;
-    const timer = window.setTimeout(() => setNotice(""), 3500);
-    return () => window.clearTimeout(timer);
-  }, [notice]);
 
   const activeIndex = Math.max(0, game.players.findIndex((p) => p.id === game.activePlayerId));
   const activePlayer = game.players[activeIndex];
@@ -53,16 +46,15 @@ export default function Home() {
     return new Map(sorted.map((player, index) => [player.id, index + 1]));
   }, [game.players]);
 
-  function commit(next: GameState, message = "변경했습니다") {
+  function commit(next: GameState) {
     setUndoState(game);
     setGame(next);
-    setNotice(message);
   }
 
   function adjustCurrent(delta: number) {
     const nextScore = Math.max(0, game.currentScore + delta);
     if (nextScore === game.currentScore) return;
-    commit({ ...game, currentScore: nextScore }, `현재 점수 ${formatScore(nextScore)}`);
+    commit({ ...game, currentScore: nextScore });
   }
 
   function setActive(index: number) {
@@ -81,13 +73,12 @@ export default function Home() {
           item.id === activePlayer.id ? { ...item, score: item.score + game.currentScore } : item,
         ),
       },
-      `${activePlayer.name}에게 +${formatScore(game.currentScore)}`,
     );
   }
 
   function saveDirectScore() {
     const parsed = Math.max(0, Number(scoreInput.replaceAll(",", "")) || 0);
-    commit({ ...game, currentScore: parsed }, `현재 점수 ${formatScore(parsed)}`);
+    commit({ ...game, currentScore: parsed });
     setEditingScore(false);
   }
 
@@ -98,7 +89,7 @@ export default function Home() {
       players: game.players.map((player) => ({ ...player, score: 0 })),
       activePlayerId: game.players[0]?.id ?? "",
     };
-    commit(next, "모든 점수를 초기화했습니다");
+    commit(next);
     setRestartOpen(false);
   }
 
@@ -126,7 +117,10 @@ export default function Home() {
         <div>
           <p className="eyebrow">GREED DICE / SCORE SHEET</p>
         </div>
-        <button className="icon-button" onClick={() => setSetupOpen(true)} aria-label="플레이어 설정">•••</button>
+        <div className="header-actions">
+          <button className="undo-button" disabled={!undoState} onClick={() => { if (!undoState) return; setGame(undoState); setUndoState(null); }} aria-label="직전 점수 변경 되돌리기">↶ 되돌리기</button>
+          <button className="icon-button" onClick={() => setSetupOpen(true)} aria-label="플레이어 설정">•••</button>
+        </div>
       </header>
 
       <section className="turn-strip" aria-label="진행 순서">
@@ -162,7 +156,7 @@ export default function Home() {
         <button className="award-current-button" disabled={game.currentScore === 0 || !activePlayer} onClick={awardActive}>
           {activePlayer?.name ?? "현재 플레이어"}에게 +{formatScore(game.currentScore)}
         </button>
-        <button className="zero-button" disabled={game.currentScore === 0} onClick={() => game.currentScore > 0 && commit({ ...game, currentScore: 0 }, "현재 점수를 0으로 만들었습니다")}>현재 점수 0으로</button>
+        <button className="zero-button" disabled={game.currentScore === 0} onClick={() => game.currentScore > 0 && commit({ ...game, currentScore: 0 })}>현재 점수 0으로</button>
       </div>
 
       <section className="players-section">
@@ -183,13 +177,6 @@ export default function Home() {
           ))}
         </div>
       </section>
-
-      {notice && (
-        <div className="toast" role="status">
-          <span>{notice}</span>
-          {undoState && <button onClick={() => { setGame(undoState); setUndoState(null); setNotice("되돌렸습니다"); }}>되돌리기</button>}
-        </div>
-      )}
 
       {setupOpen && (
         <div className="modal-backdrop" role="presentation">
