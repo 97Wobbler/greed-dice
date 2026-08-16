@@ -34,10 +34,17 @@ export default function Home() {
   const [editingScore, setEditingScore] = useState(false);
   const [scoreInput, setScoreInput] = useState("0");
   const [undoState, setUndoState] = useState<GameState | null>(null);
+  const [notice, setNotice] = useState("");
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(game));
   }, [game]);
+
+  useEffect(() => {
+    if (!notice) return;
+    const timer = window.setTimeout(() => setNotice(""), 3000);
+    return () => window.clearTimeout(timer);
+  }, [notice]);
 
   const activeIndex = Math.max(0, game.players.findIndex((p) => p.id === game.activePlayerId));
   const activePlayer = game.players[activeIndex];
@@ -46,15 +53,16 @@ export default function Home() {
     return new Map(sorted.map((player, index) => [player.id, index + 1]));
   }, [game.players]);
 
-  function commit(next: GameState) {
+  function commit(next: GameState, message: string) {
     setUndoState(game);
     setGame(next);
+    setNotice(message);
   }
 
   function adjustCurrent(delta: number) {
     const nextScore = Math.max(0, game.currentScore + delta);
     if (nextScore === game.currentScore) return;
-    commit({ ...game, currentScore: nextScore });
+    commit({ ...game, currentScore: nextScore }, `현재 점수 ${formatScore(nextScore)}`);
   }
 
   function setActive(index: number) {
@@ -66,19 +74,22 @@ export default function Home() {
 
   function awardActive() {
     if (game.currentScore === 0 || !activePlayer) return;
+    const awardedScore = game.currentScore;
     commit(
       {
         ...game,
+        currentScore: 0,
         players: game.players.map((item) =>
-          item.id === activePlayer.id ? { ...item, score: item.score + game.currentScore } : item,
+          item.id === activePlayer.id ? { ...item, score: item.score + awardedScore } : item,
         ),
       },
+      `${activePlayer.name}에게 ${formatScore(awardedScore)}점 지급`,
     );
   }
 
   function saveDirectScore() {
     const parsed = Math.max(0, Number(scoreInput.replaceAll(",", "")) || 0);
-    commit({ ...game, currentScore: parsed });
+    commit({ ...game, currentScore: parsed }, `현재 점수 ${formatScore(parsed)}`);
     setEditingScore(false);
   }
 
@@ -89,7 +100,7 @@ export default function Home() {
       players: game.players.map((player) => ({ ...player, score: 0 })),
       activePlayerId: game.players[0]?.id ?? "",
     };
-    commit(next);
+    commit(next, "모든 점수를 초기화했습니다");
     setRestartOpen(false);
   }
 
@@ -118,7 +129,7 @@ export default function Home() {
           <p className="eyebrow">GREED DICE / SCORE SHEET</p>
         </div>
         <div className="header-actions">
-          <button className="undo-button" disabled={!undoState} onClick={() => { if (!undoState) return; setGame(undoState); setUndoState(null); }} aria-label="직전 점수 변경 되돌리기">↶ 되돌리기</button>
+          <button className="undo-button" disabled={!undoState} onClick={() => { if (!undoState) return; setGame(undoState); setUndoState(null); setNotice("직전 변경을 되돌렸습니다"); }} aria-label="직전 점수 변경 되돌리기">↶ 되돌리기</button>
           <button className="icon-button" onClick={() => setSetupOpen(true)} aria-label="플레이어 설정">•••</button>
         </div>
       </header>
@@ -156,8 +167,10 @@ export default function Home() {
         <button className="award-current-button" disabled={game.currentScore === 0 || !activePlayer} onClick={awardActive}>
           {activePlayer?.name ?? "현재 플레이어"}에게 +{formatScore(game.currentScore)}
         </button>
-        <button className="zero-button" disabled={game.currentScore === 0} onClick={() => game.currentScore > 0 && commit({ ...game, currentScore: 0 })}>현재 점수 0으로</button>
+        <button className="zero-button" disabled={game.currentScore === 0} onClick={() => game.currentScore > 0 && commit({ ...game, currentScore: 0 }, "현재 점수를 0으로 만들었습니다")}>현재 점수 0으로</button>
       </div>
+
+      {notice && <div className="tablet-toast" role="status">{notice}</div>}
 
       <section className="players-section">
         <div className="column-headings" aria-hidden="true">

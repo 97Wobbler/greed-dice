@@ -53,6 +53,7 @@ h2 { margin-bottom: 0; font-size: 18px; }
 .adjust-grid button:active { color: var(--paper); background: var(--ink); transform: translateY(1px); }
 .zero-button { min-height: 44px; padding: 0 8px; border: 1px solid var(--ink); border-radius: 2px; color: var(--ink); background: transparent; font-size: 13px; font-weight: 750; }
 .zero-button:disabled { color: #89877f; border-color: var(--line); background: transparent; }
+.tablet-toast { display: none; }
 
 .players-section { display: flex; min-height: 0; margin-top: 12px; flex: 1 1 auto; flex-direction: column; overflow: hidden; }
 .section-heading { padding: 0 0 7px; border-bottom: 2px solid var(--ink); }
@@ -103,9 +104,10 @@ h2 { margin-bottom: 0; font-size: 18px; }
       "turn players"
       "score players"
       "actions players"
+      "notice players"
       ". players";
     grid-template-columns: minmax(320px, .9fr) minmax(360px, 1.1fr);
-    grid-template-rows: auto auto auto auto 1fr;
+    grid-template-rows: auto auto auto auto auto 1fr;
     column-gap: 28px;
     row-gap: 10px;
   }
@@ -114,6 +116,7 @@ h2 { margin-bottom: 0; font-size: 18px; }
   .turn-strip { grid-area: turn; margin: 0; }
   .current-card { grid-area: score; align-self: start; }
   .score-actions { grid-area: actions; margin-top: 0; }
+  .tablet-toast { display: flex; min-height: 44px; padding: 10px 12px; grid-area: notice; align-items: center; border: 2px solid var(--ink); border-radius: 2px; color: var(--paper); background: var(--ink); font-size: 12px; font-weight: 700; }
   .players-section { grid-area: players; margin: 0; padding-left: 28px; border-left: 1px solid var(--line); }
   .player-main { min-height: 62px; }
   .player-name { max-width: 220px; }
