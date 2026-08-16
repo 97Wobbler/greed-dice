@@ -35,6 +35,7 @@ export default function Home() {
   const [scoreInput, setScoreInput] = useState("0");
   const [undoState, setUndoState] = useState<GameState | null>(null);
   const [notice, setNotice] = useState("");
+  const [highlightedPlayerId, setHighlightedPlayerId] = useState<string | null>(null);
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(game));
@@ -45,6 +46,12 @@ export default function Home() {
     const timer = window.setTimeout(() => setNotice(""), 3000);
     return () => window.clearTimeout(timer);
   }, [notice]);
+
+  useEffect(() => {
+    if (!highlightedPlayerId) return;
+    const timer = window.setTimeout(() => setHighlightedPlayerId(null), 1200);
+    return () => window.clearTimeout(timer);
+  }, [highlightedPlayerId]);
 
   const activeIndex = Math.max(0, game.players.findIndex((p) => p.id === game.activePlayerId));
   const activePlayer = game.players[activeIndex];
@@ -85,6 +92,7 @@ export default function Home() {
       },
       `${activePlayer.name}에게 ${formatScore(awardedScore)}점 지급`,
     );
+    setHighlightedPlayerId(activePlayer.id);
   }
 
   function saveDirectScore() {
@@ -129,7 +137,7 @@ export default function Home() {
           <p className="eyebrow">GREED DICE / SCORE SHEET</p>
         </div>
         <div className="header-actions">
-          <button className="undo-button" disabled={!undoState} onClick={() => { if (!undoState) return; setGame(undoState); setUndoState(null); setNotice("직전 변경을 되돌렸습니다"); }} aria-label="직전 점수 변경 되돌리기">↶ 되돌리기</button>
+          <button className="undo-button" disabled={!undoState} onClick={() => { if (!undoState) return; setGame(undoState); setUndoState(null); setHighlightedPlayerId(null); setNotice("직전 변경을 되돌렸습니다"); }} aria-label="직전 점수 변경 되돌리기">↶ 되돌리기</button>
           <button className="icon-button" onClick={() => setSetupOpen(true)} aria-label="플레이어 설정">•••</button>
         </div>
       </header>
@@ -184,7 +192,7 @@ export default function Home() {
               <button className="player-main" onClick={() => setGame({ ...game, activePlayerId: player.id })} aria-label={`${player.name}을 현재 순서로 선택`}>
                 <span className="rank">{rankById.get(player.id)}위</span>
                 <strong className="player-name">{player.name}</strong>
-                <span className="player-score">{formatScore(player.score)}</span>
+                <span className={`player-score ${player.id === highlightedPlayerId ? "score-updated" : ""}`}>{formatScore(player.score)}</span>
               </button>
             </article>
           ))}

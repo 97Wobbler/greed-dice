@@ -68,7 +68,8 @@ h2 { margin-bottom: 0; font-size: 18px; }
 .rank { justify-self: start; color: var(--muted); font-size: 12px; font-weight: 700; }
 .player-card.active .rank::before { margin-right: 5px; color: var(--ink); content: "▶"; font-size: 8px; }
 .player-name { max-width: 42vw; overflow: hidden; justify-self: center; font-size: 15px; text-align: center; text-overflow: ellipsis; white-space: nowrap; }
-.player-score { justify-self: end; font-size: 22px; font-weight: 650; line-height: 1; letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
+.player-score { justify-self: end; color: var(--ink); font-size: 22px; font-weight: 650; line-height: 1; letter-spacing: -.03em; font-variant-numeric: tabular-nums; transition: color .2s ease; }
+.player-score.score-updated { color: #1457d9; }
 
 .modal-backdrop { position: fixed; z-index: 20; inset: 0; display: flex; align-items: flex-end; justify-content: center; padding: 12px; background: rgba(23, 23, 20, .58); }
 .modal { width: min(100%, 480px); max-height: 90dvh; overflow: auto; padding: 24px 20px calc(20px + env(safe-area-inset-bottom)); border: 2px solid var(--ink); border-radius: 2px; background: var(--paper); box-shadow: 8px 8px 0 rgba(23,23,20,.3); }
